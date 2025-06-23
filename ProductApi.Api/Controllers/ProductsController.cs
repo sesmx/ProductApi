@@ -22,6 +22,7 @@ public class ProductsController : ControllerBase
 
 	[HttpGet]
 	[ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
+	[Authorize]
 	public async Task<IActionResult> GetAll(CancellationToken ct)
 		=> Ok(await _svc.GetAllAsync(ct));
 
@@ -32,7 +33,7 @@ public class ProductsController : ControllerBase
 		=> Ok(await _svc.GetByIdAsync(id, ct));
 
 	[HttpPost]
-	//[Authorize(Roles = nameof(UserRole.Admin))]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	[ProducesResponseType(typeof(ProductDto), 201)]
 	[ProducesResponseType(400)]
 	public async Task<IActionResult> Create([FromBody] CreateProductDto dto, CancellationToken ct)
@@ -42,7 +43,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPut("{id:int}")]
-	//[Authorize(Roles = nameof(UserRole.Admin))]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(404)]
 	public async Task<IActionResult> Update(int id, [FromBody] UpdateProductDto dto, CancellationToken ct)
@@ -52,7 +53,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpDelete("{id:int}")]
-	//[Authorize(Roles = nameof(UserRole.Admin))]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(404)]
 	public async Task<IActionResult> Delete(int id, CancellationToken ct)
@@ -62,7 +63,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPost("{id:int}/items")]
-	//[Authorize(Roles = nameof(UserRole.Admin))]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	[ProducesResponseType(typeof(ItemDto), 201)]
 	[ProducesResponseType(404)]
 	public async Task<IActionResult> AddItem(int id, [FromBody] AddItemDto body, CancellationToken ct)

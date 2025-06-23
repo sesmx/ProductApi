@@ -23,7 +23,7 @@ public class ItemsController : ControllerBase
 	}
 
 	[HttpDelete("{itemId:int}")]
-	//[Authorize(Roles = nameof(UserRole.Admin))]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	[ProducesResponseType(204)]
 	[ProducesResponseType(404)]
 	public async Task<IActionResult> Delete(int productId, int itemId, CancellationToken ct)

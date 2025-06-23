@@ -31,11 +31,10 @@ public class AuthController : ControllerBase
 		var user = await _users.FindByNameAsync(dto.Username);
 		if (user is null) return BadRequest("Invalid credentials.");
 
-		var result = await _signIn.CheckPasswordSignInAsync(user, dto.Password, false);
-		if (!result.Succeeded) return BadRequest("Invalid credentials.");
+		var ok = await _signIn.CheckPasswordSignInAsync(user, dto.Password, false);
+		if (!ok.Succeeded) return BadRequest("Invalid credentials.");
 
-		var roles = await _users.GetRolesAsync(user);
-		var token = _jwt.Generate(user.Id.ToString(), user.UserName!, roles);
+		var token = _jwt.Generate(user);
 
 		return Ok(token);
 	}

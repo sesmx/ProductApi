@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ProductApi.Infrastructure.Data;
+using System.Security.Claims;
 using System.Text;
 
 namespace ProductApi.Infrastructure.Identity;
@@ -42,7 +44,11 @@ public static class IdentityExtensions
 		 .AddDefaultTokenProviders();
 
 		var jwt = cfg.GetSection("Jwt").Get<JwtSettings>()!;
-		s.AddAuthentication()
+		s.AddAuthentication(options =>
+		{
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		})
 		 .AddJwtBearer(opt =>
 		 {
 			 opt.TokenValidationParameters = new()
@@ -53,7 +59,8 @@ public static class IdentityExtensions
 				 ValidateIssuerSigningKey = true,
 				 ValidIssuer = jwt.Issuer,
 				 ValidAudience = jwt.Audience,
-				 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Secret))
+				 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Secret)),
+				 RoleClaimType = ClaimTypes.Role
 			 };
 		 });
 

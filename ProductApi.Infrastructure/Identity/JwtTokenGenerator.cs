@@ -9,7 +9,7 @@ namespace ProductApi.Infrastructure.Identity;
 
 public interface IJwtTokenGenerator
 {
-	TokenResponseDto Generate(string userId, string userName, IEnumerable<string> roles);
+	TokenResponseDto Generate(ApplicationUser user);
 }
 
 public class JwtTokenGenerator : IJwtTokenGenerator
@@ -23,17 +23,16 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 		_key = Encoding.UTF8.GetBytes(_cfg.Secret);
 	}
 
-	public TokenResponseDto Generate(string userId, string userName, IEnumerable<string> roles)
+	public TokenResponseDto Generate(ApplicationUser user)
 	{
 		var claims = new List<Claim>
 		{
-			new(JwtRegisteredClaimNames.Sub, userId),
-			new(JwtRegisteredClaimNames.UniqueName, userName)
+			new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+			new(JwtRegisteredClaimNames.UniqueName, user.UserName!),
+			new(ClaimTypes.Role, user.Role.ToString())
 		};
-		claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
-		var creds = new SigningCredentials(new SymmetricSecurityKey(_key),
-										   SecurityAlgorithms.HmacSha256);
+		var creds = new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256);
 
 		var expires = DateTime.UtcNow.AddMinutes(_cfg.AccessTokenMinutes);
 
