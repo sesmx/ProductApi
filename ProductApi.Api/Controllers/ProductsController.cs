@@ -22,7 +22,7 @@ public class ProductsController : ControllerBase
 
 	[HttpGet]
 	[ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
-	[Authorize]
+	[Authorize(Roles = nameof(UserRole.Admin))]
 	public async Task<IActionResult> GetAll(CancellationToken ct)
 		=> Ok(await _svc.GetAllAsync(ct));
 
