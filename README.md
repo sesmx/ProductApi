@@ -27,3 +27,36 @@ Username: user
 Password: Dxfactor@123
 UserRole: ProductUser
 ```
+
+
+## Dependency flow
+
+```
+API → Application → Domain
+API → Infrastructure → Domain
+Application → Domain
+Infrastructure → Domain
+```
+
+## Project Diagram
+
+```
++-------------------+
+|   Presentation    |  (ProductApi.Api)
++-------------------+
+          |
+          v
++-------------------+
+|   Application     |  (ProductApi.Application)
++-------------------+
+          |
+          v
++-------------------+
+|     Domain        |  (ProductApi.Domain)
++-------------------+
+          ^
+          |
++-------------------+
+|  Infrastructure   |  (ProductApi.Infrastructure)
++-------------------+
+```
